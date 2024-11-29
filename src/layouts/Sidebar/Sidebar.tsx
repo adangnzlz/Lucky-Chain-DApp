@@ -1,4 +1,3 @@
-import * as React from 'react';
 import GlobalStyles from '@mui/joy/GlobalStyles';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
@@ -16,49 +15,14 @@ import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import CasinoIcon from '@mui/icons-material/CasinoOutlined';
 
-import ColorSchemeToggle from './ColorSchemeToggle';
-import { closeSidebar } from '../utils';
+import ColorSchemeToggle from '../../components/utils/ColorSchemeToggle';
+import { closeSidebar } from '../../utils/sidebar-utils';
 import { Eip1193Provider, ethers } from "ethers";
 
 declare global {
     interface Window {
         ethereum?: Eip1193Provider;
     }
-}
-
-function Toggler({
-    defaultExpanded = false,
-    renderToggle,
-    children,
-}: {
-    defaultExpanded?: boolean;
-    children: React.ReactNode;
-    renderToggle: (params: {
-        open: boolean;
-        setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    }) => React.ReactNode;
-}) {
-    const [open, setOpen] = React.useState(defaultExpanded);
-
-    return (
-        <React.Fragment>
-            {renderToggle({ open, setOpen })}
-            <Box
-                sx={[
-                    {
-                        display: 'grid',
-                        transition: '0.2s ease',
-                        '& > *': {
-                            overflow: 'hidden',
-                        },
-                    },
-                    open ? { gridTemplateRows: '1fr' } : { gridTemplateRows: '0fr' },
-                ]}
-            >
-                {children}
-            </Box>
-        </React.Fragment>
-    );
 }
 
 export default function Sidebar() {

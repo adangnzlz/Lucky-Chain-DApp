@@ -4,8 +4,8 @@ import CssBaseline from '@mui/joy/CssBaseline';
 import Box from '@mui/joy/Box';
 import Typography from '@mui/joy/Typography';
 
-import Sidebar from './components/Sidebar';
-import Header from './components/Header';
+import Sidebar from './layouts/Sidebar/Sidebar';
+import HeaderMobile from './layouts/Sidebar/HeaderMobile';
 
 
 function App() {
@@ -16,7 +16,7 @@ function App() {
       disableTransitionOnChange>
       <CssBaseline />
       <Box sx={{ display: 'flex', minHeight: '100dvh' }}>
-        <Header />
+        <HeaderMobile />
         <Sidebar />
         <Box
           component="main"
