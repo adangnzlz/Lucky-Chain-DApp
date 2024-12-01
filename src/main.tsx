@@ -4,6 +4,7 @@ import App from './App';
 import { CssVarsProvider, extendTheme } from '@mui/joy/styles';
 import { WalletProvider } from "./context/WalletContext";
 import './index.scss';
+import './assets/styles/helpers.scss';
 
 const customTheme = extendTheme({
   colorSchemes: {

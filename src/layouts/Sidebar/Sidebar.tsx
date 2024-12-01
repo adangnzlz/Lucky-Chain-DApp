@@ -19,8 +19,9 @@ import { useWalletContext } from '../../context/WalletContext';
 import ShortText from '../../hooks/shortText';
 import { NavLink } from 'react-router-dom';
 import { Modal, ModalClose } from '@mui/joy';
-import React from 'react';
+import React, { useEffect } from 'react';
 import "./Sidebar.scss"
+import { WidthFull } from '@mui/icons-material';
 
 interface ExtendedEip1193Provider extends Eip1193Provider {
     on?: (event: string, listener: (...args: any[]) => void) => void;
@@ -53,6 +54,11 @@ export default function Sidebar() {
             console.error("MetaMask not found");
         }
     };
+
+    useEffect(() => {
+        if (isConnected) setOpen(false);
+    }, [isConnected]);
+
     return (
         <Sheet className="Sidebar"        >
             <Box
@@ -129,16 +135,34 @@ export default function Sidebar() {
             >
                 <Sheet className="wallet-modal-content">
                     <ModalClose className="modal-close" />
-                    <Typography component="h2" id="modal-title" className="modal-title">
-                        This is the modal title
+                    <Typography level="h4" component="h2" >
+                        Choose your preferred method
                     </Typography>
-                    <Button
-                        color="primary"
-                        size="sm"
-                        onClick={() => connectWallet()}
-                    >
-                        Connect wallet
-                    </Button>
+                    <Box sx={{
+                        display: 'flex',
+                        flexDirection: { xs: 'column', sm: 'row' },
+                        justifyContent: 'center'
+                    }}>
+                        <Box onClick={() => connectWallet()} className="wallet-connect-button text-center pointer" sx={{ m: 3, p: 2, display: 'flex', flexDirection: 'column' }}>
+                            <img className="mx-auto" width="75px" src="/public/images/logos/metamask.svg" alt="" />
+                            <Typography className="no-wrap" level="title-sm">
+                                Metamask
+                            </Typography>
+                        </Box>
+                        <Box onClick={() => connectWallet()} className="wallet-connect-button text-center pointer" sx={{ m: 3, p: 2, display: 'flex', flexDirection: 'column' }}>
+                            <img className="mx-auto" width="75px" src="/public/images/logos/walletconnect.svg" alt="" />
+                            <Typography className="no-wrap" level="title-sm">
+                                Wallet Connect
+                            </Typography>
+                        </Box>
+                        <Box onClick={() => connectWallet()} className="wallet-connect-button text-center pointer" sx={{ m: 3, p: 2, display: 'flex', flexDirection: 'column' }}>
+                            <img className="mx-auto" width="75px" src="/public/images/logos/rabbywallet.svg" alt="" />
+                            <Typography className="no-wrap" level="title-sm">
+                                Rabby Wallet
+                            </Typography>
+                        </Box>
+                    </Box>
+                    <Typography sx={{ mb: 2 }} level='body-sm'>Many 3rd party wallet applications do not currently have stable support for WalletConnect. If you are unable to connect, please contact your wallet provider for support before reaching out to Chainlink Labs.</Typography>
                 </Sheet>
             </Modal>
         </Sheet>
