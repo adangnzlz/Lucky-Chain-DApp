@@ -1,31 +1,44 @@
-import GlobalStyles from '@mui/joy/GlobalStyles';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Divider from '@mui/joy/Divider';
 import IconButton from '@mui/joy/IconButton';
 import List from '@mui/joy/List';
 import ListItem from '@mui/joy/ListItem';
-import ListItemButton, { listItemButtonClasses } from '@mui/joy/ListItemButton';
+import ListItemButton from '@mui/joy/ListItemButton';
 import ListItemContent from '@mui/joy/ListItemContent';
 import Typography from '@mui/joy/Typography';
 import Sheet from '@mui/joy/Sheet';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import DashboardRoundedIcon from '@mui/icons-material/Dashboard';
 import SupportRoundedIcon from '@mui/icons-material/SupportRounded';
-import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
-import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import CasinoIcon from '@mui/icons-material/CasinoOutlined';
-
 import ColorSchemeToggle from '../../components/utils/ColorSchemeToggle';
 import { closeSidebar } from '../../utils/sidebar-utils';
 import { Eip1193Provider, ethers } from "ethers";
+import { useWalletContext } from '../../context/WalletContext';
+import ShortText from '../../hooks/shortText';
+import { NavLink } from 'react-router-dom';
+import { Modal, ModalClose } from '@mui/joy';
+import React from 'react';
+import "./Sidebar.scss"
+
+interface ExtendedEip1193Provider extends Eip1193Provider {
+    on?: (event: string, listener: (...args: any[]) => void) => void;
+    removeListener?: (event: string, listener: (...args: any[]) => void) => void;
+}
 
 declare global {
     interface Window {
-        ethereum?: Eip1193Provider;
+        ethereum?: ExtendedEip1193Provider;
     }
 }
 
 export default function Sidebar() {
+    const { isConnected, walletAddress } = useWalletContext();
+    const [open, setOpen] = React.useState<boolean>(false);
+
+
+
     const connectWallet = async () => {
         if (window.ethereum) {
             try {
@@ -41,141 +54,93 @@ export default function Sidebar() {
         }
     };
     return (
-        <Sheet
-            className="Sidebar"
-            sx={{
-                position: { xs: 'fixed', md: 'sticky' },
-                transform: {
-                    xs: 'translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1)))',
-                    md: 'none',
-                },
-                transition: 'transform 0.4s, width 0.4s',
-                zIndex: 10000,
-                height: '100dvh',
-                width: 'var(--Sidebar-width)',
-                top: 0,
-                p: 2,
-                flexShrink: 0,
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 2,
-                borderRight: '1px solid',
-                borderColor: 'divider',
-            }}
-        >
-            <GlobalStyles
-                styles={(theme) => ({
-                    ':root': {
-                        '--Sidebar-width': '220px',
-                        [theme.breakpoints.up('lg')]: {
-                            '--Sidebar-width': '240px',
-                        },
-                    },
-                })}
-            />
+        <Sheet className="Sidebar"        >
             <Box
                 className="Sidebar-overlay"
-                sx={{
-                    position: 'fixed',
-                    zIndex: 9998,
-                    top: 0,
-                    left: 0,
-                    width: '100vw',
-                    height: '100vh',
-                    opacity: 'var(--SideNavigation-slideIn)',
-                    backgroundColor: 'var(--joy-palette-background-backdrop)',
-                    transition: 'opacity 0.4s',
-                    transform: {
-                        xs: 'translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1) + var(--SideNavigation-slideIn, 0) * var(--Sidebar-width, 0px)))',
-                        lg: 'translateX(-100%)',
-                    },
-                }}
                 onClick={() => closeSidebar()}
             />
-            <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+            <Box className="sidebar-header">
                 <IconButton variant="soft" size="sm">
                     <CasinoIcon />
                 </IconButton>
                 <Typography level="title-lg">Lucky Chain</Typography>
                 <ColorSchemeToggle sx={{ ml: 'auto' }} />
             </Box>
-            <Box
-                sx={{
-                    minHeight: 0,
-                    overflow: 'hidden auto',
-                    flexGrow: 1,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    [`& .${listItemButtonClasses.root}`]: {
-                        gap: 1.5,
-                    },
-                }}
-            >
+            <Box className="sidebar-content">
                 <List
                     size="sm"
-                    sx={{
-                        gap: 1,
-                        '--List-nestedInsetStart': '30px',
-                        '--ListItem-radius': (theme) => theme.vars.radius.sm,
-                    }}
+                    className="sidebar-list"
                 >
                     <ListItem>
                         <ListItemButton>
                             <HomeRoundedIcon />
                             <ListItemContent>
-                                <Typography level="title-sm">Home</Typography>
+                                <NavLink to="/"><Typography level="title-sm">Home</Typography></NavLink>
+
+                            </ListItemContent>
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem>
+                        <ListItemButton>
+                            <DashboardRoundedIcon />
+                            <ListItemContent>
+                                <NavLink to="/Dashboard"><Typography level="title-sm">Dashboard</Typography></NavLink>
                             </ListItemContent>
                         </ListItemButton>
                     </ListItem>
                 </List>
                 <List
                     size="sm"
-                    sx={{
-                        mt: 'auto',
-                        flexGrow: 0,
-                        '--ListItem-radius': (theme) => theme.vars.radius.sm,
-                        '--List-gap': '8px',
-                        mb: 2,
-                    }}
+                    className="sidebar-support-list"
                 >
-                    <ListItem>
-                        <ListItemButton>
-                            <SupportRoundedIcon />
-                            Support
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem>
-                        <ListItemButton>
-                            <SettingsRoundedIcon />
-                            Settings
-                        </ListItemButton>
-                    </ListItem>
+                    <a href="https://github.com/adangnzlz/lucky-chain" target="_blank" rel="noopener noreferrer">
+                        <ListItem>
+                            <ListItemButton>
+                                <SupportRoundedIcon />
+                                Support
+                            </ListItemButton>
+                        </ListItem>
+                    </a>
                 </List>
             </Box>
             <Divider />
-            <Button
+            {!isConnected && <Button
                 color="primary"
                 size="sm"
-                onClick={connectWallet}
+                onClick={() => setOpen(true)}
             >
                 Connect wallet
-            </Button>
-            <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-                {/* <Avatar
-          variant="outlined"
-          size="sm"
-          src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286"
-        /> */}
+            </Button>}
+            {isConnected &&
+                <Box className="connected-address">
+                    <Box sx={{ minWidth: 0, flex: 1 }}>
+                        <Typography level="title-sm">Connected Address</Typography>
+                        <Typography level="body-xs"><ShortText text={walletAddress || ''} startChars={5} endChars={20} /></Typography>
 
+                    </Box>
+                </Box>}
 
-                <Box sx={{ minWidth: 0, flex: 1 }}>
-                    <Typography level="title-sm">Siriwat K.</Typography>
-                    <Typography level="body-xs">siriwatk@test.com</Typography>
-                </Box>
-                <IconButton size="sm" variant="plain" color="neutral">
-                    <LogoutRoundedIcon />
-                </IconButton>
-            </Box>
+            <Modal
+                aria-labelledby="modal-title"
+                aria-describedby="modal-desc"
+                open={open}
+                onClose={() => setOpen(false)}
+                className="wallet-modal"
+            >
+                <Sheet className="wallet-modal-content">
+                    <ModalClose className="modal-close" />
+                    <Typography component="h2" id="modal-title" className="modal-title">
+                        This is the modal title
+                    </Typography>
+                    <Button
+                        color="primary"
+                        size="sm"
+                        onClick={() => connectWallet()}
+                    >
+                        Connect wallet
+                    </Button>
+                </Sheet>
+            </Modal>
         </Sheet>
     );
 }
