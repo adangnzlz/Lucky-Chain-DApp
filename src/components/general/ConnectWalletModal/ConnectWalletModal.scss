@@ -1,0 +1,24 @@
+
+.wallet-modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.wallet-modal-content {
+  max-width: 700px;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: var(--joy-shadow-lg);
+}
+
+.modal-close {
+  margin: 12px;
+}
+
+.wallet-connect-button {
+  border-radius: var(--joy-radius-sm);
+  &:hover {
+    background-color: var(--joy-palette-primary-900);
+  }
+}

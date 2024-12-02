@@ -1,30 +1,35 @@
+//  Appkit override
+* {
+  --wui-color-accent-100: var(--joy-palette-primary-500);
+  --wui-color-accent-090: var(--joy-palette-primary-900);
+}
+
 .MainContent {
-    padding-left: 8px; // xs
-    padding-right: 8px; // xs
-  
-    @media (min-width: 600px) { // md
-      padding-left: 24px;
-      padding-right: 24px;
-    }
-  
-    padding-top: calc(12px + var(--Header-height)); // xs
-    padding-bottom: 8px; // xs
-  
-    @media (min-width: 600px) { // sm
-      padding-top: calc(12px + var(--Header-height)); 
-      padding-bottom: 8px;
-    }
-  
-    @media (min-width: 960px) { // md
-      padding-top: 12px;
-      padding-bottom: 12px;
-    }
-  
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    height: 100vh; // '100dvh' in CSS is roughly equivalent to '100vh' for cross-browser support
-    gap: 1px;
+  padding-left: 8px; // xs
+  padding-right: 8px; // xs
+  padding-top: calc(12px + var(--Header-height)); // xs
+  padding-bottom: 8px; // xs
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100vh; // '100dvh' in CSS is roughly equivalent to '100vh' for cross-browser support
+  gap: 1px;
+
+  @media (min-width: 600px) {
+    // md
+    padding-left: 24px;
+    padding-right: 24px;
   }
-  
+  @media (min-width: 600px) {
+    // sm
+    padding-top: calc(12px + var(--Header-height));
+    padding-bottom: 8px;
+  }
+
+  @media (min-width: 960px) {
+    // md
+    padding-top: 40px;
+    padding-bottom: 12px;
+  }
+}

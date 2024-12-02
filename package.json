@@ -14,11 +14,15 @@
     "@emotion/styled": "^11.13.5",
     "@mui/icons-material": "^6.1.9",
     "@mui/joy": "^5.0.0-beta.48",
-    "@walletconnect/web3-provider": "^1.8.0",
+    "@reown/appkit": "^1.5.3",
+    "@reown/appkit-adapter-wagmi": "^1.5.3",
+    "@tanstack/react-query": "^5.62.0",
     "ethers": "^6.13.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^7.0.1"
+    "react-router-dom": "^7.0.1",
+    "viem": "^2.21.53",
+    "wagmi": "^2.13.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",

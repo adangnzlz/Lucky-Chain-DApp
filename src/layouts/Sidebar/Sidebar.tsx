@@ -15,23 +15,23 @@ import CasinoIcon from '@mui/icons-material/CasinoOutlined';
 import ColorSchemeToggle from '../../components/utils/ColorSchemeToggle';
 import { closeSidebar } from '../../utils/sidebar-utils';
 import { NavLink } from 'react-router-dom';
-import { Modal, ModalClose } from '@mui/joy';
 import React, { useEffect } from 'react';
 import "./Sidebar.scss"
-import UseWallet from '../../hooks/UseWallet';
 import ShortText from '../../hooks/ShortText';
-
-
+import { useAccount, useEnsName } from 'wagmi'
+import { useAppKit } from '@reown/appkit/react'
+import { Avatar } from '@mui/joy';
+import WalletIcon from '@mui/icons-material/Wallet';
 
 export default function Sidebar() {
-    const { isConnected, walletAddress, connectWallet, providers } = UseWallet();
-    const [open, setOpen] = React.useState<boolean>(false);
-
-
+    const { address, connector } = useAccount();
+    const { status } = useEnsName({ address });
+    const { open, close } = useAppKit()
 
     useEffect(() => {
-        if (isConnected) setOpen(false);
-    }, [isConnected]);
+        if (status == 'success') close();
+    }, [status, close]);
+
 
     return (
         <Sheet className="Sidebar"        >
@@ -84,58 +84,20 @@ export default function Sidebar() {
                 </List>
             </Box>
             <Divider />
-            {!isConnected && <Button
+            {status != 'success' && <Button
                 color="primary"
                 size="sm"
-                onClick={() => setOpen(true)}
+                onClick={() => open()}
             >
                 Connect wallet
             </Button>}
-            {isConnected &&
-                <Box className="connected-address">
-                    <Box sx={{ minWidth: 0, flex: 1 }}>
-                        <Typography level="title-sm">Connected Address</Typography>
-                        <Typography level="body-xs"><ShortText text={walletAddress || ''} startChars={5} endChars={20} /></Typography>
+            {status == 'success' &&   <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: "center" }}>
+                <Avatar><WalletIcon></WalletIcon></Avatar> <Typography sx={{ ml: 2 }} level="body-sm">
+                    <ShortText text={address || ''} startChars={4} endChars={12}></ShortText>
+                </Typography>
+            </Box>}
+            {status == 'success' && <appkit-network-button />}
 
-                    </Box>
-                </Box>}
-
-            <Modal
-                aria-labelledby="modal-title"
-                aria-describedby="modal-desc"
-                open={open}
-                onClose={() => setOpen(false)}
-                className="wallet-modal"
-            >
-                <Sheet className="wallet-modal-content">
-                    <ModalClose className="modal-close" />
-                    <Typography level="h4" component="h2" >
-                        Choose your preferred method
-                    </Typography>
-                    <Box sx={{
-                        display: 'flex',
-                        flexDirection: { xs: 'column', sm: 'row' },
-                        justifyContent: 'center'
-                    }}>
-                        {Object.values(providers).map(x =>
-                            <Box key={x.info.uuid} onClick={() => connectWallet(x.info.name)} className="wallet-connect-button text-center pointer" sx={{ m: 3, p: 2, display: 'flex', flexDirection: 'column' }}>
-                                <img className="mx-auto" width="75px" src={x.info.icon} alt="" />
-                                <Typography className="no-wrap" level="title-sm">
-                                    {x.info.name}
-                                </Typography>
-                            </Box>
-
-                        )}
-                        {/* <Box onClick={() => connectWallet('MetaMask')} className="wallet-connect-button text-center pointer" sx={{ m: 3, p: 2, display: 'flex', flexDirection: 'column' }}>
-                            <img className="mx-auto" width="75px" src="/public/images/logos/walletconnect.svg" alt="" />
-                            <Typography className="no-wrap" level="title-sm">
-                                Wallet Connect
-                            </Typography>
-                        </Box> */}
-                    </Box>
-                    <Typography sx={{ mb: 2 }} level='body-sm'>Many 3rd party wallet applications do not currently have stable support for WalletConnect. If you are unable to connect, please contact your wallet provider for support before reaching out to Chainlink Labs.</Typography>
-                </Sheet>
-            </Modal>
-        </Sheet>
+        </Sheet >
     );
 }

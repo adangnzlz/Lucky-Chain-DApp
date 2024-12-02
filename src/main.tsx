@@ -7,7 +7,7 @@ import './assets/styles/helpers.scss';
 
 declare global {
   interface Window {
-    ethereum?: ExtendedEip1193Provider;
+    ethereum: ExtendedEip1193Provider | undefined;
   }
 }
 

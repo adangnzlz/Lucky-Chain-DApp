@@ -11,7 +11,7 @@
 
 .Sidebar {
   z-index: 1000;
-  position: fixed;
+  position: fixed!important;
   transform: translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1)));
   transition: transform 0.4s, width 0.4s;
   height: 100dvh;
@@ -28,7 +28,7 @@
   padding-left: 5px;
   padding-right: 10px;
   @media (min-width: 768px) {
-    position: sticky;
+    position: sticky!important;
     transform: none;
     padding: 16px;
   }
@@ -123,31 +123,6 @@
   align-items: center;
 }
 
-.wallet-modal {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.wallet-modal-content {
-  max-width: 700px;
-  padding: 12px;
-  border-radius: 8px;
-  box-shadow: var(--joy-shadow-lg);
-}
-
-.modal-close {
-  margin: 12px;
-}
-
-.modal-title {
-  font-weight: bold;
-  margin-bottom: 12px;
-}
-
-.modal-desc {
-  color: var(--joy-palette-text-tertiary);
-}
 .wallet-connect-button {
   border-radius: var(--joy-radius-sm);
   &:hover {

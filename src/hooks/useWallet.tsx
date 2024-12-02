@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ethers } from "ethers";
+import { Eip1193Provider, ethers } from "ethers";
 
 interface ProviderInfo {
   uuid: string;
@@ -22,6 +22,23 @@ const UseWallet = () => {
 
   useEffect(() => {
     const detectedProviders: { [x: string]: ProviderDetail } = {};
+
+    const checkConnection = async () => {
+      if (window.ethereum) {
+        const ethereum = (window.ethereum as unknown) as Eip1193Provider;
+        const provider = new ethers.BrowserProvider(ethereum);
+        const accounts = await provider.listAccounts();
+        setIsConnected(accounts.length > 0);
+        if (accounts.length > 0) {
+          const signer = await provider.getSigner();
+          const address = await signer.getAddress();
+          setWalletAddress(address);
+        } else {
+          setWalletAddress(null);
+        }
+      }
+    };
+    checkConnection();
 
     const handleAccountsChanged = (accounts: string[]) => {
       setIsConnected(accounts.length > 0);
