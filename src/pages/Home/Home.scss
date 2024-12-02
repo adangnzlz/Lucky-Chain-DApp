@@ -1,18 +1,8 @@
 .home {
   display: flex;
+  flex-direction: column;
   margin-bottom: 1rem; /* Ajusta las unidades si no es rem */
   gap: 1rem; /* Ajusta las unidades si necesario */
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: space-between;
-
-  @media (max-width: 600px) {
-    /* Ajusta el punto de quiebre según tus necesidades */
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  @media (min-width: 601px) {
-    flex-direction: row;
-    align-items: center;
-  }
 }

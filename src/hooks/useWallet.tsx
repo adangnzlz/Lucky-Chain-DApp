@@ -1,48 +1,85 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 
+interface ProviderInfo {
+  uuid: string;
+  name: string;
+  icon: string;
+  rdns: string;
+}
 
-const useWallet = () => {
+interface ProviderDetail {
+  info: ProviderInfo;
+  provider: ExtendedEip1193Provider;
+  browserProvider: ethers.BrowserProvider;
+}
+
+
+const UseWallet = () => {
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const [providers, setProviders] = useState<{ [x: string]: ProviderDetail }>({});
 
   useEffect(() => {
-    const checkConnection = async () => {
-      if (window.ethereum) {
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        const accounts = await provider.listAccounts();
-        setIsConnected(accounts.length > 0);
-
-        if (accounts.length > 0) {
-          const signer = await provider.getSigner();
-          const address = await signer.getAddress();
-
-          setWalletAddress(address);
-        } else {
-          setWalletAddress(null);
-        }
-      }
-    };
+    const detectedProviders: { [x: string]: ProviderDetail } = {};
 
     const handleAccountsChanged = (accounts: string[]) => {
       setIsConnected(accounts.length > 0);
       setWalletAddress(accounts.length > 0 ? accounts[0] : null);
     };
 
-    checkConnection();
+    const handleProviderAnnouncement = (event: CustomEvent) => {
+      const info = event.detail.info as ProviderInfo;
+      const provider: ExtendedEip1193Provider = event.detail.provider;
+      const browserProvider = new ethers.BrowserProvider(event.detail.provider);
+      provider.on("accountsChanged", handleAccountsChanged);
+      detectedProviders[info.name] = { info, provider, browserProvider }
+      setProviders(detectedProviders);
+      console.log(`Provider announced: ${info.name}`);
+    };
 
-    if (window.ethereum && typeof window.ethereum.on === "function") {
-      window.ethereum.on("accountsChanged", handleAccountsChanged);
+    const requestProviders = () => window.dispatchEvent(new Event("eip6963:requestProvider"));
 
-      return () => {
-        if (typeof window.ethereum!.removeListener === "function") {
-          window.ethereum!.removeListener("accountsChanged", handleAccountsChanged);
-        }
-      };
-    }
+
+
+    const init = async () => {
+      // Detect providers using EIP-6963
+      window.addEventListener("eip6963:announceProvider", handleProviderAnnouncement as EventListener);
+
+      // Request providers to announce themselves
+      requestProviders();
+
+    };
+
+    init();
+
+    return () => {
+      // Cleanup listeners
+      window.removeEventListener("eip6963:announceProvider", handleProviderAnnouncement as EventListener);
+      Object.values(detectedProviders).forEach(element => {
+        element.provider.removeListener("accountsChanged", handleAccountsChanged);
+      });
+    };
   }, []);
 
-  return { isConnected, walletAddress };
+  const connectWallet = async (providerName: string) => {
+    const selectedProvider = providers[providerName];
+    if (!selectedProvider) {
+      console.error(`Provider ${providerName} not found`);
+      return;
+    }
+
+    const accounts = await selectedProvider.browserProvider.send("eth_requestAccounts", []);
+    setIsConnected(accounts.length > 0);
+
+    if (accounts.length > 0) {
+      const signer = await selectedProvider.browserProvider.getSigner();
+      const address = await signer.getAddress();
+      setWalletAddress(address);
+    }
+  };
+
+  return { isConnected, walletAddress, providers, connectWallet };
 };
 
-export default useWallet;
+export default UseWallet;

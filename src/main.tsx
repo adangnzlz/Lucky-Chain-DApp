@@ -2,9 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import { CssVarsProvider, extendTheme } from '@mui/joy/styles';
-import { WalletProvider } from "./context/WalletContext";
 import './index.scss';
 import './assets/styles/helpers.scss';
+
+declare global {
+  interface Window {
+    ethereum?: ExtendedEip1193Provider;
+  }
+}
 
 const customTheme = extendTheme({
   colorSchemes: {
@@ -45,9 +50,7 @@ const customTheme = extendTheme({
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <CssVarsProvider theme={customTheme} defaultMode="dark">
-      <WalletProvider>
-        <App />
-      </WalletProvider>
+      <App />
     </CssVarsProvider>
   </React.StrictMode>
 );

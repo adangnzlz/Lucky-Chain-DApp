@@ -14,46 +14,20 @@ import SupportRoundedIcon from '@mui/icons-material/SupportRounded';
 import CasinoIcon from '@mui/icons-material/CasinoOutlined';
 import ColorSchemeToggle from '../../components/utils/ColorSchemeToggle';
 import { closeSidebar } from '../../utils/sidebar-utils';
-import { Eip1193Provider, ethers } from "ethers";
-import { useWalletContext } from '../../context/WalletContext';
-import ShortText from '../../hooks/shortText';
 import { NavLink } from 'react-router-dom';
 import { Modal, ModalClose } from '@mui/joy';
 import React, { useEffect } from 'react';
 import "./Sidebar.scss"
-import { WidthFull } from '@mui/icons-material';
+import UseWallet from '../../hooks/UseWallet';
+import ShortText from '../../hooks/ShortText';
 
-interface ExtendedEip1193Provider extends Eip1193Provider {
-    on?: (event: string, listener: (...args: any[]) => void) => void;
-    removeListener?: (event: string, listener: (...args: any[]) => void) => void;
-}
 
-declare global {
-    interface Window {
-        ethereum?: ExtendedEip1193Provider;
-    }
-}
 
 export default function Sidebar() {
-    const { isConnected, walletAddress } = useWalletContext();
+    const { isConnected, walletAddress, connectWallet, providers } = UseWallet();
     const [open, setOpen] = React.useState<boolean>(false);
 
 
-
-    const connectWallet = async () => {
-        if (window.ethereum) {
-            try {
-                const provider = new ethers.BrowserProvider(window.ethereum);
-                await provider.send("eth_requestAccounts", []);
-                const signer = await provider.getSigner();
-                console.log("Address:", await signer.getAddress());
-            } catch (error) {
-                console.error("Error connecting wallet:", error);
-            }
-        } else {
-            console.error("MetaMask not found");
-        }
-    };
 
     useEffect(() => {
         if (isConnected) setOpen(false);
@@ -143,24 +117,21 @@ export default function Sidebar() {
                         flexDirection: { xs: 'column', sm: 'row' },
                         justifyContent: 'center'
                     }}>
-                        <Box onClick={() => connectWallet()} className="wallet-connect-button text-center pointer" sx={{ m: 3, p: 2, display: 'flex', flexDirection: 'column' }}>
-                            <img className="mx-auto" width="75px" src="/public/images/logos/metamask.svg" alt="" />
-                            <Typography className="no-wrap" level="title-sm">
-                                Metamask
-                            </Typography>
-                        </Box>
-                        <Box onClick={() => connectWallet()} className="wallet-connect-button text-center pointer" sx={{ m: 3, p: 2, display: 'flex', flexDirection: 'column' }}>
+                        {Object.values(providers).map(x =>
+                            <Box key={x.info.uuid} onClick={() => connectWallet(x.info.name)} className="wallet-connect-button text-center pointer" sx={{ m: 3, p: 2, display: 'flex', flexDirection: 'column' }}>
+                                <img className="mx-auto" width="75px" src={x.info.icon} alt="" />
+                                <Typography className="no-wrap" level="title-sm">
+                                    {x.info.name}
+                                </Typography>
+                            </Box>
+
+                        )}
+                        {/* <Box onClick={() => connectWallet('MetaMask')} className="wallet-connect-button text-center pointer" sx={{ m: 3, p: 2, display: 'flex', flexDirection: 'column' }}>
                             <img className="mx-auto" width="75px" src="/public/images/logos/walletconnect.svg" alt="" />
                             <Typography className="no-wrap" level="title-sm">
                                 Wallet Connect
                             </Typography>
-                        </Box>
-                        <Box onClick={() => connectWallet()} className="wallet-connect-button text-center pointer" sx={{ m: 3, p: 2, display: 'flex', flexDirection: 'column' }}>
-                            <img className="mx-auto" width="75px" src="/public/images/logos/rabbywallet.svg" alt="" />
-                            <Typography className="no-wrap" level="title-sm">
-                                Rabby Wallet
-                            </Typography>
-                        </Box>
+                        </Box> */}
                     </Box>
                     <Typography sx={{ mb: 2 }} level='body-sm'>Many 3rd party wallet applications do not currently have stable support for WalletConnect. If you are unable to connect, please contact your wallet provider for support before reaching out to Chainlink Labs.</Typography>
                 </Sheet>

@@ -3,9 +3,8 @@ import { Box, Typography } from "@mui/joy";
 import "./Home.scss"
 export default function Home() {
     return (
-        <Box className="home">
-            <h1>Home</h1>
-            <br></br>
+        <Box sx={{ display: 'flex', flexDirection: 'column' }} className="home">
+            <Typography level="h2">Home</Typography>
             <Typography component="p">
                 Lucky Chain is a decentralized lottery built on Ethereum that supports execution with both the native token and an ERC20 token.
                 <br></br>

@@ -39,17 +39,8 @@ export default function ColorSchemeToggle(props: IconButtonProps) {
         }
         onClick?.(event);
       }}
-      sx={[
-        mode === 'dark'
-          ? { '& > *:first-child': { display: 'none' } }
-          : { '& > *:first-child': { display: 'initial' } },
-        mode === 'light'
-          ? { '& > *:last-child': { display: 'none' } }
-          : { '& > *:last-child': { display: 'initial' } },
-        ...(Array.isArray(sx) ? sx : [sx]),
-      ]}
+      sx={[...(Array.isArray(sx) ? sx : [sx]),]}
     >
-      <DarkModeRoundedIcon />
       <LightModeIcon />
     </IconButton>
   );

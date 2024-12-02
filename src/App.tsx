@@ -22,34 +22,13 @@ function App() {
         <Box sx={{ display: 'flex', minHeight: '100dvh' }}>
           <HeaderMobile />
           <Sidebar />
-          <Box
-            component="main"
-            className="MainContent"
-            sx={{
-              px: { xs: 2, md: 6 },
-              pt: {
-                xs: 'calc(12px + var(--Header-height))',
-                sm: 'calc(12px + var(--Header-height))',
-                md: 3,
-              },
-              pb: { xs: 2, sm: 2, md: 3 },
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              minWidth: 0,
-              height: '100dvh',
-              gap: 1,
-            }}
-          >
-
-
+          <Box component="main" className="MainContent">
             <Suspense fallback={<div>Loading...</div>}>
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/Dashboard" element={<Dashboard />} />
               </Routes>
             </Suspense>
-
 
           </Box>
         </Box>
