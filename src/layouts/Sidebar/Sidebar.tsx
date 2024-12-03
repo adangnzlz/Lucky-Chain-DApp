@@ -15,16 +15,15 @@ import CasinoIcon from '@mui/icons-material/CasinoOutlined';
 import ColorSchemeToggle from '../../components/utils/ColorSchemeToggle';
 import { closeSidebar } from '../../utils/sidebar-utils';
 import { NavLink } from 'react-router-dom';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import "./Sidebar.scss"
-import ShortText from '../../hooks/ShortText';
 import { useAccount, useEnsName } from 'wagmi'
 import { useAppKit } from '@reown/appkit/react'
-import { Avatar } from '@mui/joy';
-import WalletIcon from '@mui/icons-material/Wallet';
+import Account from '../../pages/Account/Account';
+import { TokenIcon } from '@web3icons/react'
 
 export default function Sidebar() {
-    const { address, connector } = useAccount();
+    const { address } = useAccount();
     const { status } = useEnsName({ address });
     const { open, close } = useAppKit()
 
@@ -62,9 +61,17 @@ export default function Sidebar() {
                     </ListItem>
                     <ListItem>
                         <ListItemButton>
-                            <DashboardRoundedIcon />
+                            <TokenIcon size="18px" symbol='eth' variant="mono" />
                             <ListItemContent>
-                                <NavLink to="/Dashboard"><Typography level="title-sm">Dashboard</Typography></NavLink>
+                                <NavLink to="/lottery-eth"><Typography level="title-sm">Lottery ETH</Typography></NavLink>
+                            </ListItemContent>
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem>
+                        <ListItemButton>
+                            <TokenIcon size="18px" symbol="link" variant="mono" />
+                            <ListItemContent>
+                                <NavLink to="/lottery-link"><Typography level="title-sm">Lottery LINK</Typography></NavLink>
                             </ListItemContent>
                         </ListItemButton>
                     </ListItem>
@@ -91,11 +98,7 @@ export default function Sidebar() {
             >
                 Connect wallet
             </Button>}
-            {status == 'success' &&   <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: "center" }}>
-                <Avatar><WalletIcon></WalletIcon></Avatar> <Typography sx={{ ml: 2 }} level="body-sm">
-                    <ShortText text={address || ''} startChars={4} endChars={12}></ShortText>
-                </Typography>
-            </Box>}
+            {status == 'success' && <Account></Account>}
             {status == 'success' && <appkit-network-button />}
 
         </Sheet >

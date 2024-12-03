@@ -10,39 +10,22 @@ import { WagmiProvider } from 'wagmi'
 import { AppKitNetwork, sepolia } from '@reown/appkit/networks'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
-import { http, createConfig } from 'wagmi'
-import { walletConnect } from 'wagmi/connectors'
 
 
 
 
 import './App.scss';
+import { projectId, wagmiConfig } from './wagmiConfig';
+
 const Home = React.lazy(() => import('./pages/Home/Home'));
-const Dashboard = React.lazy(() => import('./pages/Dashboard/Dashboard'));
+const LotteryETH = React.lazy(() => import('./pages/LotteryETH/LotteryETH'));
+const LotteryLINK = React.lazy(() => import('./pages/LotteryLINK/LotteryLINK'));
 
 
 const queryClient = new QueryClient()
-const projectId = 'a9507ff230a74185f9b0ff9586e8f162'
 const networks: [AppKitNetwork, ...AppKitNetwork[]] = [sepolia]
 
-const wagmiConfig = createConfig({
-  chains: [sepolia],
-  connectors: [
-    walletConnect({
-      projectId,
-      qrModalOptions: {
-        themeMode: 'dark',
-        themeVariables: {
-          "--wcm-z-index": "9999999",
-          "--w3m-z-index": "9999999",
-        }
-      }
-    }),
-  ],
-  transports: {
-    [sepolia.id]: http(),
-  },
-})
+
 createAppKit({
   showWallets: false,
   adapters: [new WagmiAdapter({
@@ -85,7 +68,8 @@ function App() {
                 <Suspense fallback={<div>Loading...</div>}>
                   <Routes>
                     <Route path="/" element={<Home />} />
-                    <Route path="/Dashboard" element={<Dashboard />} />
+                    <Route path="/lottery-eth" element={<LotteryETH />} />
+                    <Route path="/lottery-link" element={<LotteryLINK />} />
                   </Routes>
                 </Suspense>
 
