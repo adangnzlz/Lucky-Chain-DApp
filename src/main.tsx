@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
+import App from './app/App';
 import { CssVarsProvider, extendTheme } from '@mui/joy/styles';
 import './index.scss';
 import './assets/styles/helpers.scss';

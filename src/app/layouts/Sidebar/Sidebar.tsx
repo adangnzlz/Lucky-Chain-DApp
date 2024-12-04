@@ -9,28 +9,20 @@ import ListItemContent from '@mui/joy/ListItemContent';
 import Typography from '@mui/joy/Typography';
 import Sheet from '@mui/joy/Sheet';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
-import DashboardRoundedIcon from '@mui/icons-material/Dashboard';
 import SupportRoundedIcon from '@mui/icons-material/SupportRounded';
 import CasinoIcon from '@mui/icons-material/CasinoOutlined';
 import ColorSchemeToggle from '../../components/utils/ColorSchemeToggle';
-import { closeSidebar } from '../../utils/sidebar-utils';
+import { closeSidebar } from './Sidebar.utils';
 import { NavLink } from 'react-router-dom';
-import { useEffect } from 'react';
 import "./Sidebar.scss"
-import { useAccount, useEnsName } from 'wagmi'
-import { useAppKit } from '@reown/appkit/react'
-import Account from '../../pages/Account/Account';
 import { TokenIcon } from '@web3icons/react'
+import { useConnectModal } from '@rainbow-me/rainbowkit';
+import Account from '../../pages/Account/Account';
+import { useAccount } from 'wagmi';
 
 export default function Sidebar() {
-    const { address } = useAccount();
-    const { status } = useEnsName({ address });
-    const { open, close } = useAppKit()
-
-    useEffect(() => {
-        if (status == 'success') close();
-    }, [status, close]);
-
+    const { openConnectModal } = useConnectModal();
+    const { isConnected } = useAccount();
 
     return (
         <Sheet className="Sidebar"        >
@@ -59,22 +51,28 @@ export default function Sidebar() {
                             </ListItemContent>
                         </ListItemButton>
                     </ListItem>
-                    <ListItem>
-                        <ListItemButton>
-                            <TokenIcon size="18px" symbol='eth' variant="mono" />
-                            <ListItemContent>
-                                <NavLink to="/lottery-eth"><Typography level="title-sm">Lottery ETH</Typography></NavLink>
-                            </ListItemContent>
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem>
-                        <ListItemButton>
-                            <TokenIcon size="18px" symbol="link" variant="mono" />
-                            <ListItemContent>
-                                <NavLink to="/lottery-link"><Typography level="title-sm">Lottery LINK</Typography></NavLink>
-                            </ListItemContent>
-                        </ListItemButton>
-                    </ListItem>
+                    {
+                        isConnected &&
+                        <ListItem>
+                            <ListItemButton>
+                                <TokenIcon size="18px" symbol='eth' variant="mono" />
+                                <ListItemContent>
+                                    <NavLink to="/lottery-eth"><Typography level="title-sm">Lottery ETH</Typography></NavLink>
+                                </ListItemContent>
+                            </ListItemButton>
+                        </ListItem>
+                    }
+                    {
+                        isConnected &&
+                        <ListItem>
+                            <ListItemButton>
+                                <TokenIcon size="18px" symbol="link" variant="mono" />
+                                <ListItemContent>
+                                    <NavLink to="/lottery-link"><Typography level="title-sm">Lottery LINK</Typography></NavLink>
+                                </ListItemContent>
+                            </ListItemButton>
+                        </ListItem>
+                    }
                 </List>
                 <List
                     size="sm"
@@ -91,16 +89,14 @@ export default function Sidebar() {
                 </List>
             </Box>
             <Divider />
-            {status != 'success' && <Button
+            {openConnectModal && <Button
                 color="primary"
                 size="sm"
-                onClick={() => open()}
+                onClick={openConnectModal}
             >
                 Connect wallet
             </Button>}
-            {status == 'success' && <Account></Account>}
-            {status == 'success' && <appkit-network-button />}
-
+            {!openConnectModal && <Account></Account>}
         </Sheet >
     );
 }

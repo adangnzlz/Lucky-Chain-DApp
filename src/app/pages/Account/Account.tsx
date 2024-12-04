@@ -5,6 +5,7 @@ import { Box, Typography } from '@mui/joy';
 
 export default function Account() {
     const { address, isConnected } = useAccount();
+
     let content;
     const { data: balance, isLoading, isError } = useBalance({
         address,
@@ -35,6 +36,7 @@ export default function Account() {
                     {balanceLink && <AddressBalanceLabel balance={balanceLink?.value} decimals={balanceLink?.decimals} symbol={balanceLink?.symbol} ></AddressBalanceLabel>}
                 </Box>
             </Box>
+
             }
         </Box>
     );

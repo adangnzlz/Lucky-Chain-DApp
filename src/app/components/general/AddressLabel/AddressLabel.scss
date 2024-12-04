@@ -1,0 +1,12 @@
+.AddressLabel {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  border-radius: 100px;
+  padding: 4px 1px;
+  &:hover {
+    background: #2f3132;
+  }
+}
+
+
