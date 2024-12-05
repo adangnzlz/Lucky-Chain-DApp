@@ -12,7 +12,7 @@ export default function Account() {
     });
     const { data: balanceLink } = useBalance({
         address,
-        token: import.meta.env.VITE_LINK_TOKEN_ADDRESS as `0x${string}`
+        token: import.meta.env.VITE_LINK_TOKEN_MOCK_ADDRESS as `0x${string}`
     });
     if (!isConnected) {
         content = <Typography level='body-sm'>Connect your wallet to view the balance.</Typography>;
