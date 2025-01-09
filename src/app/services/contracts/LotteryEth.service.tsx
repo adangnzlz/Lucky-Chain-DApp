@@ -10,7 +10,6 @@ import {
 import { wagmiConfig } from "../../../wagmiConfig";
 
 export interface IPlayer {
-  alias: string;
   address: string;
   date: Date;
   subscriptions?: number;

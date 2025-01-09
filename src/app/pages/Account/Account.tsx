@@ -10,10 +10,10 @@ export default function Account() {
     const { data: balance, isLoading, isError } = useBalance({
         address,
     });
-    const { data: balanceLink } = useBalance({
-        address,
-        token: import.meta.env.VITE_LINK_TOKEN_MOCK_ADDRESS as `0x${string}`
-    });
+    // const { data: balanceLink } = useBalance({
+    //     address,
+    //     token: import.meta.env.VITE_LINK_TOKEN_ADDRESS as `0x${string}`
+    // });
     if (!isConnected) {
         content = <Typography level='body-sm'>Connect your wallet to view the balance.</Typography>;
     }
@@ -33,7 +33,7 @@ export default function Account() {
                 <AddressLabel short={true} address={address || ''}></AddressLabel>
                 <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 1 }}>
                     {balance && <AddressBalanceLabel balance={balance?.value} decimals={balance?.decimals} symbol={balance?.symbol} ></AddressBalanceLabel>}
-                    {balanceLink && <AddressBalanceLabel balance={balanceLink?.value} decimals={balanceLink?.decimals} symbol={balanceLink?.symbol} ></AddressBalanceLabel>}
+                    {/* {balanceLink && <AddressBalanceLabel balance={balanceLink?.value} decimals={balanceLink?.decimals} symbol={balanceLink?.symbol} ></AddressBalanceLabel>} */}
                 </Box>
             </Box>
 

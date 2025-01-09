@@ -19,11 +19,11 @@ function RouterContent() {
                         <ProtectedRoute isAllowed={isConnected}><LotteryETH /></ProtectedRoute>
                     }
                 />
-                <Route path="/lottery-link"
+                {/* <Route path="/lottery-link"
                     element={
                         <ProtectedRoute isAllowed={isConnected}><LotteryLINK /></ProtectedRoute>
                     }
-                />
+                /> */}
             </Routes>
         </Suspense>
     );

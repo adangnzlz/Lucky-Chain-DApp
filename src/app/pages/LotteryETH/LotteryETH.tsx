@@ -45,7 +45,7 @@ export default function LotteryETH() {
         const playerEnteredListener = (player: string, amount: bigint) => {
             console.log("New player entered", player)
             setPlayers(prevPlayers => {
-                return mergePlayers([...prevPlayers, { alias: `Paco ${prevPlayers.length + 1}`, address: player, date: new Date() }])
+                return mergePlayers([...prevPlayers, { address: player, date: new Date() }])
             });
             setTotalFunds(prev => (prev ? prev + amount : amount));
         };
@@ -102,7 +102,7 @@ export default function LotteryETH() {
 
     useEffect(() => {
         if (initialPlayers) {
-            const mockPlayers = mergePlayers(initialPlayers.map((x, i) => ({ alias: `Paco ${i + 1}`, address: x, date: new Date() })));
+            const mockPlayers = mergePlayers(initialPlayers.map((x) => ({ address: x, date: new Date() })));
             setPlayers(mockPlayers);
         }
 
@@ -225,7 +225,6 @@ export default function LotteryETH() {
                 < Table sx={{ mt: 2, '& thead th:nth-of-type(1)': { width: '100px' }, '& thead th:nth-of-type(4)': { width: '150px' }, '& tr > *:not(:first-of-type)': { textAlign: 'right' } }}>
                     <thead>
                         <tr>
-                            <th>Player Alias</th>
                             <th>Deposited</th>
                             <th>Address</th>
                             <th>Date Joined</th>
@@ -234,7 +233,6 @@ export default function LotteryETH() {
                     <tbody>
                         {players.map((row) => (
                             <tr key={row.address}>
-                                <td>{row.alias}</td>
                                 <td> <BalanceNumber balance={BigInt(row.subscriptions || 1) * ticketPrice} decimals={18} symbol='eth' /></td>
                                 <td>{row.address || ''}</td>
                                 {/* <td><ShortText text={row.address || ''} startChars={6} endChars={12}></ShortText></td> */}

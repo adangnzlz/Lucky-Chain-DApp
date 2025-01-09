@@ -62,7 +62,7 @@ export default function Sidebar() {
                             </ListItemButton>
                         </ListItem>
                     }
-                    {
+                    {/* {
                         isConnected &&
                         <ListItem>
                             <ListItemButton>
@@ -72,7 +72,7 @@ export default function Sidebar() {
                                 </ListItemContent>
                             </ListItemButton>
                         </ListItem>
-                    }
+                    } */}
                 </List>
                 <List
                     size="sm"
